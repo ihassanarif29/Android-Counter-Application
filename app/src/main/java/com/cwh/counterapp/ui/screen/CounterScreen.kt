@@ -85,8 +85,21 @@ fun CounterScreen() {
 
         // Target
         Text(
-            text = "Target: $target"
+            text = "$count / $target",
+            style = MaterialTheme.typography.titleMedium
         )
+
+        if (count == target) {
+
+            Spacer(
+                modifier = Modifier.height(12.dp)
+            )
+
+            Text(
+                text = "Target Completed!",
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
 
         Spacer(
             modifier = Modifier.height(24.dp)
