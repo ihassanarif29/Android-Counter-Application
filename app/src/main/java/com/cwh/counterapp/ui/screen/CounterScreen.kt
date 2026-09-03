@@ -20,18 +20,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.cwh.counterapp.data.repository.CounterRepository
 import com.cwh.counterapp.ui.components.CounterButton
 import com.cwh.counterapp.ui.components.CounterComponent
 import com.cwh.counterapp.ui.components.ResetButton
 import com.cwh.counterapp.ui.theme.BackgroundLight
 import com.cwh.counterapp.viewmodel.CounterViewModel
+import com.cwh.counterapp.viewmodel.CounterViewModelFactory
 
 @Composable
 fun CounterScreen(
-    viewModel: CounterViewModel = viewModel()
 ) {
+
+    val context = LocalContext.current
+    val repository = CounterRepository(context)
+    val factory = CounterViewModelFactory(repository)
+    val viewModel: CounterViewModel = viewModel(
+        factory = factory
+    )
 
     val count by viewModel.count.collectAsState()
     val target = viewModel.target
