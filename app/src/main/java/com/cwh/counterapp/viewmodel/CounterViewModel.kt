@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.cwh.counterapp.data.repository.CounterRepository
 import com.cwh.counterapp.model.Dhikr
 import com.cwh.counterapp.model.defaultDhikrList
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,24 +21,35 @@ class CounterViewModel (
     val count: StateFlow<Int> = _count.asStateFlow()
     val target = 33
 
+    private var countJob: Job? = null
+
     init {
-        loadCount()
+        loadCount(defaultDhikrList[0])
     }
 
-    private fun loadCount() {
-        viewModelScope.launch {
-            repository.count.collect { savedCount ->
-                _count.value = savedCount
-            }
+    private fun loadCount(dhikr: Dhikr) {
+
+        countJob?.cancel()
+
+        countJob = viewModelScope.launch {
+
+            repository
+                .getCount(dhikr.id)
+                .collect { savedCount ->
+
+                    _count.value = savedCount
+                }
         }
     }
 
     fun selectDhikr(dhikr: Dhikr) {
         _selectedDhikr.value = dhikr
-        _count.value = 0
+        loadCount(dhikr)
     }
 
     fun increment() {
+        val target =
+            _selectedDhikr.value.target
         if (_count.value < target) {
             _count.value++
             saveCount()
@@ -50,8 +62,19 @@ class CounterViewModel (
     }
 
     private fun saveCount() {
+
+        val dhikrId =
+            _selectedDhikr.value.id
+
+        val currentCount =
+            _count.value
+
         viewModelScope.launch {
-            repository.saveCount(_count.value)
+
+            repository.saveCount(
+                dhikrId = dhikrId,
+                count = currentCount
+            )
         }
     }
 }

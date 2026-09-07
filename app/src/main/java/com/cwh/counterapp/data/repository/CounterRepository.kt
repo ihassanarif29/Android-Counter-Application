@@ -19,14 +19,30 @@ class CounterRepository(
         private val COUNT_KEY = intPreferencesKey("count")
     }
 
-    val count: Flow<Int> = context.dataStore.data
-        .map { preferences ->
-            preferences[COUNT_KEY] ?: 0
-        }
+    fun getCount(dhikrId: String): Flow<Int> {
 
-    suspend fun saveCount(count: Int) {
+        val countKey = intPreferencesKey(
+            "count_$dhikrId"
+        )
+
+        return context.dataStore.data
+            .map { preferences ->
+                preferences[countKey] ?: 0
+            }
+    }
+
+    suspend fun saveCount(
+        dhikrId: String,
+        count: Int
+    ) {
+
+        val countKey = intPreferencesKey(
+            "count_$dhikrId"
+        )
+
         context.dataStore.edit { preferences ->
-            preferences[COUNT_KEY] = count
+
+            preferences[countKey] = count
         }
     }
 }
