@@ -24,8 +24,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cwh.counterapp.data.repository.CounterRepository
+import com.cwh.counterapp.model.defaultDhikrList
 import com.cwh.counterapp.ui.components.CounterButton
 import com.cwh.counterapp.ui.components.CounterComponent
+import com.cwh.counterapp.ui.components.DhikrDropdown
 import com.cwh.counterapp.ui.components.ResetButton
 import com.cwh.counterapp.ui.theme.BackgroundLight
 import com.cwh.counterapp.viewmodel.CounterViewModel
@@ -43,7 +45,8 @@ fun CounterScreen(
     )
 
     val count by viewModel.count.collectAsState()
-    val target = viewModel.target
+    val selectedDhikr by viewModel.selectedDhikr.collectAsState()
+    val target = selectedDhikr.target
 
     Column(
         modifier = Modifier
@@ -58,14 +61,14 @@ fun CounterScreen(
             style = MaterialTheme.typography.headlineMedium
         )
 
-        Spacer(
-            modifier = Modifier.height(16.dp)
-        )
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Current Dhikr
-        Text(
-            text = "SubhanAllah",
-            style = MaterialTheme.typography.titleLarge
+        DhikrDropdown(
+            selectedDhikr = selectedDhikr,
+            dhikrList = defaultDhikrList,
+            onDhikrSelected = { dhikr ->
+                viewModel.selectDhikr(dhikr)
+            }
         )
 
         Spacer(
