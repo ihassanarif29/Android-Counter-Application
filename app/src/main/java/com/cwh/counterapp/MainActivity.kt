@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.cwh.counterapp.navigation.CounterNavHost
 import com.cwh.counterapp.ui.screen.CounterScreen
 import com.cwh.counterapp.ui.theme.CounterAppTheme
 
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CounterAppTheme {
-                CounterScreen()
+                CounterNavHost()
             }
         }
     }
