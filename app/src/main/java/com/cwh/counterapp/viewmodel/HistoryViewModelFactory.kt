@@ -2,12 +2,10 @@ package com.cwh.counterapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.cwh.counterapp.data.repository.CounterRepository
 import com.cwh.counterapp.data.repository.HistoryRepository
 
-class CounterViewModelFactory(
-    private val repository: CounterRepository,
-    private val historyRepository: HistoryRepository
+class HistoryViewModelFactory(
+    private val repository: HistoryRepository
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(
@@ -16,15 +14,14 @@ class CounterViewModelFactory(
 
         if (
             modelClass.isAssignableFrom(
-                CounterViewModel::class.java
+                HistoryViewModel::class.java
             )
         ) {
 
             @Suppress("UNCHECKED_CAST")
 
-            return CounterViewModel(
-                repository = repository,
-                historyRepository = historyRepository
+            return HistoryViewModel(
+                repository
             ) as T
         }
 

@@ -23,7 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.cwh.counterapp.data.local.TasbihDatabase
 import com.cwh.counterapp.data.repository.CounterRepository
+import com.cwh.counterapp.data.repository.HistoryRepository
 import com.cwh.counterapp.model.defaultDhikrList
 import com.cwh.counterapp.ui.components.CounterButton
 import com.cwh.counterapp.ui.components.CounterComponent
@@ -39,7 +41,17 @@ fun CounterScreen(
 
     val context = LocalContext.current
     val repository = CounterRepository(context)
-    val factory = CounterViewModelFactory(repository)
+    val database =
+        TasbihDatabase.getDatabase(context)
+
+    val historyRepository =
+        HistoryRepository(database.historyDao())
+
+    val factory =
+        CounterViewModelFactory(
+            repository = repository,
+            historyRepository = historyRepository
+        )
     val viewModel: CounterViewModel = viewModel(
         factory = factory
     )
